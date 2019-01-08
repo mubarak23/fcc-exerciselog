@@ -51,7 +51,23 @@ app.use((err, req, res, next) => {
   }
   res.status(errCode).type('txt')
     .send(errMessage)
+});
+
+
+app.post("/api/exercise/new-user", function(req, res){
+      var user = New Username();
+      user.username = req.body.username;
+      user.save(function(err){
+          if(err){
+              console.log(err);
+          }else{
+            res.json(user);
+          }
+      });
 })
+
+
+
 
 const listener = app.listen(3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
