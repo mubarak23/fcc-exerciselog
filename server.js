@@ -3,6 +3,8 @@ const app = express()
 const bodyParser = require('body-parser')
 var Username = require("./model/user");
 var ExerciseLog = require("./model/exerciselog");
+//const apiRouter = require('./routes/api');
+var router = express.Router();
 
 const cors = require('cors')
 
@@ -15,8 +17,14 @@ mongoose.connect('mongodb://root:root123@ds251240.mlab.com:51240/nodehome',
         console.log("Coneected to the DB");
       }
 
-  } )
+  } );
 
+/*var UsernameSchema = new mongoose.Schema({
+    username: { type: String, lowercase: true},
+});
+
+var User = mongoose.model("username", UsernameSchema);
+*/
 app.use(cors())
 
 app.use(bodyParser.urlencoded({extended: false}))
@@ -32,7 +40,10 @@ app.get('/', (req, res) => {
 // Not found middleware
 app.use((req, res, next) => {
   return next({status: 404, message: 'not found'})
-})
+});
+
+
+//app.use('/api', router);
 
 // Error Handling middleware
 app.use((err, req, res, next) => {
@@ -54,8 +65,10 @@ app.use((err, req, res, next) => {
 });
 
 
-app.post("/api/exercise/new-user", function(req, res){
-      var user = New Username();
+router.post("/exercise/new-user", function(req, res){
+      res.json("good Here");
+
+      var user = new Username();
       user.username = req.body.username;
       user.save(function(err){
           if(err){
