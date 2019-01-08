@@ -1,11 +1,21 @@
-var mongoose = require("mongoose");
+'use strict'
 
-UsernameSchema = new mongoose.Schema({
-		username: { type: String, lowercase: true},
-		_id: {
+const shortid = require('shortid')
+const mongoose = require('mongoose')
+const Schema = mongoose.Schema
+
+var Users = new Schema({
+  username: {
+    type: String, 
+    required: true,
+    unique: true,
+    maxlength: [20, 'username too long']
+  },
+  _id: {
     type: String,
-    index: true
+    index: true,
+    default: shortid.generate
   }
-});
+})
 
-module.export = mongoose.model("username", UsernameSchema);
+module.exports = mongoose.model('Users', Users)

@@ -1,30 +1,21 @@
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
-var Username = require("./model/user");
-var ExerciseLog = require("./model/exerciselog");
-//const apiRouter = require('./routes/api');
-var router = express.Router();
 
 const cors = require('cors')
 
 const mongoose = require('mongoose')
 mongoose.connect('mongodb://root:root123@ds251240.mlab.com:51240/nodehome',
-  { useNewUrlParser: true}, function(err){
-      if(err){
-        console.log(err);
-      }else{
-        console.log("Coneected to the DB");
-      }
+{ useNewUrlParser: true }, 
+  function(err){
+    if(err){
+      console.log(err);
+    }else{
+      console.log('Connected to the DB')
+    }
+  });
 
-  } );
 
-/*var UsernameSchema = new mongoose.Schema({
-    username: { type: String, lowercase: true},
-});
-
-var User = mongoose.model("username", UsernameSchema);
-*/
 app.use(cors())
 
 app.use(bodyParser.urlencoded({extended: false}))
@@ -36,14 +27,13 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
+const apiRouter = require('./routes/api')
+app.use('/api/exercise', apiRouter)
 
 // Not found middleware
 app.use((req, res, next) => {
   return next({status: 404, message: 'not found'})
-});
-
-
-//app.use('/api', router);
+})
 
 // Error Handling middleware
 app.use((err, req, res, next) => {
@@ -62,25 +52,7 @@ app.use((err, req, res, next) => {
   }
   res.status(errCode).type('txt')
     .send(errMessage)
-});
-
-
-router.post("/exercise/new-user", function(req, res){
-      res.json("good Here");
-
-      var user = new Username();
-      user.username = req.body.username;
-      user.save(function(err){
-          if(err){
-              console.log(err);
-          }else{
-            res.json(user);
-          }
-      });
 })
-
-
-
 
 const listener = app.listen(3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
